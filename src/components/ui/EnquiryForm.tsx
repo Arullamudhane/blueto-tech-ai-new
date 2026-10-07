@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle2, Loader2, Lock, Send } from 'lucide-react';
 import { company, formsAccessKey } from '../../config/company';
+import { trackLead } from '../../lib/analytics';
 
 export type Field = {
   name: string;
@@ -57,7 +58,10 @@ const EnquiryForm: React.FC<Props> = ({
       });
       const data = await res.json();
       setStatus(data.success ? 'sent' : 'error');
-      if (data.success) setValues({});
+      if (data.success) {
+        setValues({});
+        trackLead(subject);
+      }
     } catch {
       setStatus('error');
     }
